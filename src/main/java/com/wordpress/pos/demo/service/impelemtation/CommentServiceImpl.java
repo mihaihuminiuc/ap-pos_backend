@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -32,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
         comments.setArticle(article);
         comments.setComment(commentDTO.getComment());
+        comments.setCorrId(UUID.randomUUID());
 
         commentRepository.save(comments);
     }

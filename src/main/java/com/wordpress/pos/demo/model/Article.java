@@ -1,11 +1,13 @@
 package com.wordpress.pos.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -52,6 +54,14 @@ public class Article {
         this.articleTitle = articleTitle;
     }
 
+    public UUID getCorrId() {
+        return corrId;
+    }
+
+    public void setCorrId(UUID corrId) {
+        this.corrId = corrId;
+    }
+
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -70,6 +80,11 @@ public class Article {
 
     @OneToMany(mappedBy="article", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comments> comments;
+
+    @Column(name = "article_uuid")
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private UUID corrId;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)

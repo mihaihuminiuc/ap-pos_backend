@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -37,6 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setUser(user);
         article.setArticleContent(articleDTO.getArticleDTO().getArticleContent());
         article.setArticleTitle(articleDTO.getArticleDTO().getArticleTitle());
+        article.setCorrId(UUID.randomUUID());
 
         articleRepository.save(article);
     }

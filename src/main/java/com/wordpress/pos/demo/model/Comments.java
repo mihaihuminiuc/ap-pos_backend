@@ -1,8 +1,11 @@
 package com.wordpress.pos.demo.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.UUID;
 
 @Entity
 @Table(name = "COMMENTS")
@@ -40,6 +43,14 @@ public class Comments {
         this.user = user;
     }
 
+    public UUID getCorrId() {
+        return corrId;
+    }
+
+    public void setCorrId(UUID corrId) {
+        this.corrId = corrId;
+    }
+
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -58,4 +69,8 @@ public class Comments {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
+    @Column(name = "comment_uuid")
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private UUID corrId;
 }
