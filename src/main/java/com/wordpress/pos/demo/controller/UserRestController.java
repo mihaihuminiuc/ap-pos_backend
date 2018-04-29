@@ -38,8 +38,7 @@ public class UserRestController {
     @Autowired
     private UserServiceImpl userServiceImpl;
 
-    @CrossOrigin
-   @RequestMapping(value = "${route.profile.userprofile}", method = RequestMethod.GET)
+    @RequestMapping(value = "${route.profile.userprofile}", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -47,7 +46,6 @@ public class UserRestController {
         return user;
     }
 
-    @CrossOrigin
     @RequestMapping(value = "${route.profile.saveprofile}", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

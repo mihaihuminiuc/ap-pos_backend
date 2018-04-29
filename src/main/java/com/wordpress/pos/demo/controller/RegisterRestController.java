@@ -25,7 +25,6 @@ public class RegisterRestController {
     @Autowired
     private UserServiceImpl userServiceImpl;
 
-    @CrossOrigin
     @RequestMapping(value="${route.register}", method= RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

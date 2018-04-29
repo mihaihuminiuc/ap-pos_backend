@@ -31,7 +31,6 @@ public class CommentController {
     @Autowired
     Messages messages;
 
-    @CrossOrigin
     @RequestMapping(value = "${route.comment.getcomments}/{id}"  , method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -43,7 +42,6 @@ public class CommentController {
                 .body(commentService.getAllCommentsForArticleId(id));
     }
 
-    @CrossOrigin
     @RequestMapping(value = "${route.comment.createcomment}/{id}", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
