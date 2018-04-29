@@ -19,7 +19,7 @@ spring:
   jpa:
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create
 
     database-platform: org.hibernate.dialect.PostgreSQL82Dialect
     database: postgresql
