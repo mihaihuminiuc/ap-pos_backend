@@ -23,9 +23,9 @@ spring:
     #password: d313db086cc6537beaa7777559ba448717bc94655c6e0a94b70e55a6f05c48be
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL82Dialect
-    database: postgresql
-    #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    #database-platform: org.hibernate.dialect.PostgreSQL82Dialect
+    #database: postgresql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
     hibernate.ddl-auto: update
 
