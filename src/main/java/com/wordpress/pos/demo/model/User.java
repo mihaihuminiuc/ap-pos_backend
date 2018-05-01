@@ -65,6 +65,17 @@ public class User implements Serializable {
     @JsonManagedReference
     private List<Comments> comments;
 
+    @Column(name = "user_uuid")
+    private String userUUID;
+
+    public String getUserUUID() {
+        return userUUID;
+    }
+
+    public void setUserUUID(String userUUID) {
+        this.userUUID = userUUID;
+    }
+
     public List<Article> getArticles() {
         return articles;
     }

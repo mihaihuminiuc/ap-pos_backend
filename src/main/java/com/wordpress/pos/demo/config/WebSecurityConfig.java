@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-            @Override
+    @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
@@ -71,10 +71,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/register").permitAll()
+                .antMatchers("/auth", "/register","/getArticle","/getArticles").permitAll()
                 .and()
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .antMatcher("/getProfile")
-                .antMatcher("/saveProfile");
+                .antMatcher("/saveProfile")
+                .antMatcher("/createArticle")
+                .antMatcher("/updateArticle")
+                .antMatcher("/createComment")
+                .antMatcher("/updateComment");
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(userDTO.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        user.setUserUUID(UUID.randomUUID().toString());
         user.setEnabled(true);
 
         this.userRepository.save(user);

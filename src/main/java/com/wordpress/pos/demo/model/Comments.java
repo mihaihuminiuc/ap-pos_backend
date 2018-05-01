@@ -1,11 +1,10 @@
 package com.wordpress.pos.demo.model;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.UUID;
 
 @Entity
 @Table(name = "COMMENTS")
@@ -43,12 +42,12 @@ public class Comments {
         this.user = user;
     }
 
-    public UUID getCorrId() {
-        return corrId;
+    public String getCommentUUID() {
+        return commentUUID;
     }
 
-    public void setCorrId(UUID corrId) {
-        this.corrId = corrId;
+    public void setCommentUUID(String commentUUID) {
+        this.commentUUID = commentUUID;
     }
 
     @Id
@@ -56,21 +55,21 @@ public class Comments {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "comment", length = 50, unique = true)
+    @Column(name = "comment", length = 50, nullable=false)
     @NotNull
     @Size(min = 4, max = 50)
     private String comment;
     
     @ManyToOne
-    @JoinColumn(name="article_id", nullable=false)
+    @JsonBackReference
+    @JoinColumn(name="article_uuid", nullable=false)
     private Article article;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JsonBackReference
+    @JoinColumn(name="user_uuid", nullable=false)
     private User user;
 
-    @Column(name = "comment_uuid")
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private UUID corrId;
+    @Column(name = "comment_uuid", nullable=false)
+    private String commentUUID;
 }

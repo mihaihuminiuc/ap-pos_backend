@@ -1,10 +1,14 @@
 package com.wordpress.pos.demo.service.impelemtation;
 
+import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.dto.CommentDTO;
+import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.model.Article;
 import com.wordpress.pos.demo.model.Comments;
+import com.wordpress.pos.demo.model.User;
 import com.wordpress.pos.demo.repository.CommentRepository;
 import com.wordpress.pos.demo.service.CommentService;
+import com.wordpress.pos.demo.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,26 +27,24 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comments> getAllCommentsForArticleId(long id) {
-        return commentRepository.findAll();
+    public List<Comments> getAllCommentsForArticleId(String uuid) {
+        return commentRepository.findAllByArticle_ArticleUUID(uuid);
     }
 
     @Override
-    public void saveComment(CommentDTO commentDTO, Article article) throws PersistenceException {
-        Comments comments =  new Comments();
+    public void createComment(CommentDTO commentDTO, User user, Article article) throws PersistenceException {
 
+        Comments comments = ObjectMapperUtils.map(commentDTO.getCommentDTO(), Comments.class);
+        comments.setCommentUUID(UUID.randomUUID().toString());
+        comments.setUser(user);
         comments.setArticle(article);
-        comments.setComment(commentDTO.getComment());
-        comments.setCorrId(UUID.randomUUID());
-
         commentRepository.save(comments);
     }
 
     @Override
-    public void updateArticle(CommentDTO commentDTO) throws PersistenceException {
-        Comments comments =  new Comments();
+    public void updateArticle(CommentDTO commentDTO, User user, Article article) throws PersistenceException {
 
-        comments.setComment(commentDTO.getComment());
+        Comments comments = ObjectMapperUtils.map(commentDTO, Comments.class);
 
         commentRepository.save(comments);
     }

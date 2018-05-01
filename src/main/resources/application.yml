@@ -1,4 +1,5 @@
 
+
 # JACKSON
 spring:
   jackson:
@@ -7,6 +8,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://ec2-54-228-181-43.eu-west-1.compute.amazonaws.com/d3d05l0qrroosj?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    #url: jdbc:mysql://dbdev101.ccx7hdurz6w7.eu-west-1.rds.amazonaws.com/devtest102
     #url: jdbc:mysql://localhost:3306/wordpress
     #driverClassName: com.mysql.jdbc.Driver
     driverClassName: org.postgresql.Driver
@@ -35,11 +37,13 @@ route:
   authentication:
     path: auth
     refresh: refresh
+    logout: logout
   profile:
     userprofile: getProfile
     saveprofile: saveProfile
   article:
     getarticles: getArticles
+    getArticle: getArticle
     createarticle: createArticle
     updatearticle: updateArticle
   comment:
@@ -51,3 +55,5 @@ logging:
   level:
     org.springframework:
       security: DEBUG
+server:
+  port: 8081

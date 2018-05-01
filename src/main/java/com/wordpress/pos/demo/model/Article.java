@@ -54,12 +54,12 @@ public class Article {
         this.articleTitle = articleTitle;
     }
 
-    public UUID getCorrId() {
-        return corrId;
+    public String getArticleUUID() {
+        return articleUUID;
     }
 
-    public void setCorrId(UUID corrId) {
-        this.corrId = corrId;
+    public void setArticleUUID(String articleUUID) {
+        this.articleUUID = articleUUID;
     }
 
     @Id
@@ -78,16 +78,14 @@ public class Article {
     @Size(min = 10, max  = 50)
     private String articleTitle;
 
-    @OneToMany(mappedBy="article", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="article", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comments> comments;
 
     @Column(name = "article_uuid")
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private UUID corrId;
+    private String articleUUID;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="user_user_uuid", nullable=false)
     @JsonBackReference
     private User user;
 

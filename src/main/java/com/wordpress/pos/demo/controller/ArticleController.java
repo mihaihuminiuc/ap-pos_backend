@@ -1,8 +1,8 @@
 package com.wordpress.pos.demo.controller;
 
-import com.wordpress.pos.demo.dto.ArticleDTO;
+import com.wordpress.pos.demo.dto.article.ArticleDTO;
+import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
-import com.wordpress.pos.demo.model.Article;
 import com.wordpress.pos.demo.service.ArticleService;
 import com.wordpress.pos.demo.service.UserService;
 import com.wordpress.pos.demo.util.Messages;
@@ -39,15 +39,27 @@ public class ArticleController {
     Messages messages;
 
     @CrossOrigin
-    @RequestMapping(value = "${route.article.getarticles}", method = RequestMethod.GET,
+    @RequestMapping(value = "${route.article.getarticles}/{page}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<List<Article>> getArticles() {
+    ResponseEntity<List<CompactArticleDTO>> getArticles(@PathVariable int page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(articleService.getAllArticles());
+                .body(articleService.getAllArticles(page));
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${route.article.getArticle}/{uuid}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public @ResponseBody
+    ResponseEntity<ArticleDTO> gerArticle(@PathVariable String uuid) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .body(articleService.getArticleDTOByUUID(uuid));
     }
 
     @CrossOrigin
@@ -65,7 +77,7 @@ public class ArticleController {
         ArticleDTO articleDTO = new ArticleDTO(collect);
 
         try{
-            articleService.saveArticle(userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)), articleDTO);
+            articleService.createArticle(userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)), articleDTO);
             statusObject.setStatus(2);
             statusObject.setMessage(messages.get("text.info.article.created"));
             return ResponseEntity
@@ -83,7 +95,7 @@ public class ArticleController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "${route.article.updatearticle}", method = RequestMethod.POST,
+    @RequestMapping(value = "${route.article.updatearticle}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )

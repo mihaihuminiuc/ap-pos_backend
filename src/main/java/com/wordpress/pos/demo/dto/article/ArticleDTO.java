@@ -1,5 +1,6 @@
-package com.wordpress.pos.demo.dto;
+package com.wordpress.pos.demo.dto.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.wordpress.pos.demo.model.Comments;
@@ -16,12 +17,12 @@ public class ArticleDTO {
         this.articleContent = articleContent;
     }
 
-    public List<Comments> getCommentsList() {
-        return commentsList;
+    public List<Comments> getComments() {
+        return comments;
     }
 
-    public void setCommentsList(List<Comments> commentsList) {
-        this.commentsList = commentsList;
+    public void setComments(List<Comments> comments) {
+        this.comments = comments;
     }
 
     public ArticleDTO getArticleDTO() {
@@ -32,14 +33,6 @@ public class ArticleDTO {
         this.articleDTO = articleDTO;
     }
 
-    public int getArticleID() {
-        return articleID;
-    }
-
-    public void setArticleID(int articleID) {
-        this.articleID = articleID;
-    }
-
     public String getArticleTitle() {
         return articleTitle;
     }
@@ -48,15 +41,23 @@ public class ArticleDTO {
         this.articleTitle = articleTitle;
     }
 
+    public String getArticleUUID() {
+        return articleUUID;
+    }
+
+    public void setArticleUUID(String articleUUID) {
+        this.articleUUID = articleUUID;
+    }
+
     public ArticleDTO(String response){
         Gson gson = new Gson();
         this.articleDTO = gson.fromJson(response,ArticleDTO.class);
     }
 
-    private ArticleDTO articleDTO;
+    public ArticleDTO(){}
 
-    @SerializedName("article_id")
-    private int articleID;
+    @JsonIgnore
+    private ArticleDTO articleDTO;
 
     @SerializedName("article_title")
     private String articleTitle;
@@ -65,5 +66,8 @@ public class ArticleDTO {
     private String articleContent;
 
     @SerializedName("commnets")
-    private List<Comments> commentsList;
+    private List<Comments> comments;
+
+    @SerializedName("article_uuid")
+    private String articleUUID;
 }
