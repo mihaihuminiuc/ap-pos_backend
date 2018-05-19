@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     Article findByArticleUUID(String uuid);
-    Article findArticleByUssrId(Long id);
+    Article findArticleByUserId(Long id);
 }

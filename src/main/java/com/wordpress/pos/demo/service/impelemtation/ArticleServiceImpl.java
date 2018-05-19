@@ -52,7 +52,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article getArticleByUserId(long id) {
-        return ObjectMapperUtils.map(articleRepository.findArticleByUssrId(id), Article.class);
+        return ObjectMapperUtils.map(articleRepository.findArticleByUserId(id), Article.class);
     }
 
     @Override
