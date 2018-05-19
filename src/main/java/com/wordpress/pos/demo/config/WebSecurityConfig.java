@@ -78,7 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatcher("/saveProfile")
                 .antMatcher("/createArticle")
                 .antMatcher("/updateArticle")
+                .antMatcher("/verifyArticleCreator")
                 .antMatcher("/createComment")
-                .antMatcher("/updateComment");
+                .antMatcher("/updateComment")
+                .antMatcher("/verifyCommentCreator");
     }
 }

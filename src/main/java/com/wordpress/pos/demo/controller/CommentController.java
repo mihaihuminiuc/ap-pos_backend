@@ -101,7 +101,8 @@ public class CommentController {
         long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
         try{
-            if(commentService.getArticleByUserId(userId)!=null){
+            if(commentService.getCommentByUUID(commentDTO.getCommentDTO().getCommentUUID())
+                    .getUser().getId().equals(userId)){
                 try{
                     commentService.updateArticle(commentDTO);
 
@@ -138,12 +139,12 @@ public class CommentController {
         }
     }
 
-    @RequestMapping(value = "${route.comment.verifycomment}", method = RequestMethod.POST,
+    @RequestMapping(value = "${route.comment.verifycomment}/{uuid}", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<StatusObject> verifyComment(HttpServletRequest request) {
+    ResponseEntity<StatusObject> verifyComment(HttpServletRequest request, @PathVariable String uuid) {
         StatusObject statusObject = new StatusObject();
 
         String token = request.getHeader(tokenHeader).substring(7);
@@ -151,7 +152,7 @@ public class CommentController {
         long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
         try{
-            if(commentService.getArticleByUserId(userId)!=null){
+            if(commentService.getCommentByUUID(uuid).getUser().getId().equals(userId)){
                 statusObject.setStatus(2);
                 statusObject.setMessage(messages.get("text.info.username.isowner"));
                 return ResponseEntity

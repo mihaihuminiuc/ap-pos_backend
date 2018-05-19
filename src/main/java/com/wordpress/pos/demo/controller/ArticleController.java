@@ -109,7 +109,7 @@ public class ArticleController {
         long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
         try{
-            if(articleService.getArticleByUserId(userId)!=null){
+            if(articleService.getArticleByUUID(uuid).getUser().getId().equals(userId)){
                 statusObject.setStatus(2);
                 statusObject.setMessage(messages.get("text.info.username.isowner"));
 
@@ -151,11 +151,11 @@ public class ArticleController {
         long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
         try{
-            if(articleService.getArticleByUserId(userId)!=null){
 
-                String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-                ArticleDTO articleDTO = new ArticleDTO(collect);
+            String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            ArticleDTO articleDTO = new ArticleDTO(collect);
 
+            if(articleService.getArticleByUUID(articleDTO.getArticleDTO().getArticleUUID()).getUser().getId().equals(userId)){
                 try{
                     articleService.updateArticle(articleDTO);
                     statusObject.setStatus(2);

@@ -12,6 +12,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comments, Long> {
 
     List<Comments> findAllByArticle_ArticleUUID(String uuid);
+    Comments findByCommentUUID(String uuid);
     List<Comments> findCommentsByUserId(Long id);
 
     @Modifying

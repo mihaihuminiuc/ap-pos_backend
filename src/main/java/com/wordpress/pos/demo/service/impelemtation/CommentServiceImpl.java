@@ -43,6 +43,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Comments getCommentByUUID(String uuid) {
+        return ObjectMapperUtils.map(commentRepository.findByCommentUUID(uuid), Comments.class);
+    }
+
+    @Override
     public Comments getArticleByUserId(long id) {
         return ObjectMapperUtils.map(commentRepository.findCommentsByUserId(id), Comments.class);
     }
