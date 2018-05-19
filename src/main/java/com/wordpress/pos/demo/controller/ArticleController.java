@@ -97,11 +97,11 @@ public class ArticleController {
 
 
     @CrossOrigin
-    @RequestMapping(value = "${route.article.verifyarticle}", method = RequestMethod.GET,
+    @RequestMapping(value = "${route.article.verifyarticle}/{uuid}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<StatusObject> verifyArticleCreator(HttpServletRequest request) {
+    ResponseEntity<StatusObject> verifyArticleCreator(HttpServletRequest request, @PathVariable String uuid) {
         StatusObject statusObject = new StatusObject();
 
         String token = request.getHeader(tokenHeader).substring(7);

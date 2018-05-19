@@ -75,15 +75,13 @@ public class CommentController {
                     .status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
-        }catch (PersistenceException e){
+        }catch (IllegalArgumentException | PersistenceException e){
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get("text.error.generalerror"));
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
-
-
         }
     }
 

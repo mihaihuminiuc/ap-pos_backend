@@ -3,6 +3,7 @@ package com.wordpress.pos.demo.dto.article;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.wordpress.pos.demo.dto.CommentDTO;
 import com.wordpress.pos.demo.model.Comments;
 
 import java.util.List;
@@ -17,11 +18,11 @@ public class ArticleDTO {
         this.articleContent = articleContent;
     }
 
-    public List<Comments> getComments() {
+    public List<CommentDTO> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comments> comments) {
+    public void setComments(List<CommentDTO> comments) {
         this.comments = comments;
     }
 
@@ -66,7 +67,7 @@ public class ArticleDTO {
     private String articleContent;
 
     @SerializedName("commnets")
-    private List<Comments> comments;
+    private List<CommentDTO> comments;
 
     @SerializedName("article_uuid")
     private String articleUUID;
