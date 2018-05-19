@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 public class ArticleController {
+
     @Value("${jwt.header}")
     private String tokenHeader;
 
@@ -89,6 +90,49 @@ public class ArticleController {
             statusObject.setMessage(messages.get("text.error.generalerror"));
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        }
+    }
+
+
+    @CrossOrigin
+    @RequestMapping(value = "${route.article.verifyarticle}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public @ResponseBody
+    ResponseEntity<StatusObject> verifyArticleCreator(HttpServletRequest request) throws IOException {
+        StatusObject statusObject = new StatusObject();
+
+        String token = request.getHeader(tokenHeader).substring(7);
+
+        long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
+
+        if(userId == articleService.getArticleByUserId(userId).getUser().getId()){
+            try{
+                statusObject.setStatus(2);
+                statusObject.setMessage(messages.get("text.info.username.isowner"));
+
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+
+            }catch (PersistenceException e){
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.username.notowner"));
+
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        }else{
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get("text.info.username.notowner"));
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         }

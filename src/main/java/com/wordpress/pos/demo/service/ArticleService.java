@@ -12,6 +12,7 @@ public interface ArticleService {
     public List<CompactArticleDTO> getAllArticles(int count);
     public ArticleDTO getArticleDTOByUUID(String uuid);
     public Article getArticleByUUID(String uuid);
+    public Article getArticleByUserId(long id);
     public void createArticle(User user, ArticleDTO articleDTO);
     public void updateArticle(User user, ArticleDTO articleDTO);
 }

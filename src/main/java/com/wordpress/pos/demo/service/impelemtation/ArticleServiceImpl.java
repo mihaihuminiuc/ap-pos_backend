@@ -51,6 +51,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Article getArticleByUserId(long id) {
+        return ObjectMapperUtils.map(articleRepository.findArticleByUssrId(id), Article.class);
+    }
+
+    @Override
     public void createArticle(User user, ArticleDTO articleDTO) {
 
         Article article = new Article();

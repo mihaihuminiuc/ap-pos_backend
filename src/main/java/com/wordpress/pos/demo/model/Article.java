@@ -85,7 +85,7 @@ public class Article {
     private String articleUUID;
 
     @ManyToOne
-    @JoinColumn(name="user_user_uuid", nullable=false)
+    @JoinColumn(name="user_id", nullable=false)
     @JsonBackReference
     private User user;
 

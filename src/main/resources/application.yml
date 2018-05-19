@@ -51,6 +51,7 @@ route:
     getArticle: getArticle
     createarticle: createArticle
     updatearticle: updateArticle
+    verifyarticle: verifyArticleCreator
   comment:
     getcomments: getComments
     createcomment: createComment

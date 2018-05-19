@@ -62,12 +62,12 @@ public class Comments {
     
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name="article_uuid", nullable=false)
+    @JoinColumn(name="article_id", nullable=false)
     private Article article;
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name="user_uuid", nullable=false)
+    @JoinColumn(name="user_id", nullable=false)
     private User user;
 
     @Column(name = "comment_uuid", nullable=false)
