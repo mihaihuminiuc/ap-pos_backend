@@ -37,6 +37,14 @@ public class CommentDTO {
         this.userUUID = userUUID;
     }
 
+    public String getCommentUUID() {
+        return commentUUID;
+    }
+
+    public void setCommentUUID(String commentUUID) {
+        this.commentUUID = commentUUID;
+    }
+
     public CommentDTO(String response){
         Gson gson = new Gson();
         this.commentDTO = gson.fromJson(response,CommentDTO.class);
@@ -52,4 +60,7 @@ public class CommentDTO {
 
     @SerializedName("user_uuid")
     private String userUUID;
+
+    @SerializedName("comment_uuid")
+    private String commentUUID;
 }

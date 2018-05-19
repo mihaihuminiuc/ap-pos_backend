@@ -86,5 +86,96 @@ public class CommentController {
 
         }
     }
+
+    @RequestMapping(value = "${route.comment.updatecomment}", method = RequestMethod.PUT,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public @ResponseBody
+    ResponseEntity<StatusObject> updateComment(HttpServletRequest request) throws IOException {
+        StatusObject statusObject = new StatusObject();
+
+        String token = request.getHeader(tokenHeader).substring(7);
+
+        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        CommentDTO commentDTO = new CommentDTO(collect);
+
+        long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
+
+        try{
+            if(commentService.getArticleByUserId(userId)!=null){
+                try{
+                    commentService.updateArticle(commentDTO);
+
+                    statusObject.setStatus(2);
+                    statusObject.setMessage(messages.get("text.info.comment.updated"));
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }catch (PersistenceException e){
+                    statusObject.setStatus(1);
+                    statusObject.setMessage(messages.get("text.error.generalerror"));
+
+                    return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }
+            }else{
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.username.notowner"));
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        }catch (IllegalArgumentException e){
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get("text.info.username.notowner"));
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        }
+    }
+
+    @RequestMapping(value = "${route.comment.verifycomment}", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public @ResponseBody
+    ResponseEntity<StatusObject> verifyComment(HttpServletRequest request) {
+        StatusObject statusObject = new StatusObject();
+
+        String token = request.getHeader(tokenHeader).substring(7);
+
+        long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
+
+        try{
+            if(commentService.getArticleByUserId(userId)!=null){
+                statusObject.setStatus(2);
+                statusObject.setMessage(messages.get("text.info.username.isowner"));
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }else{
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.username.notowner"));
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        }catch (IllegalArgumentException e){
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get("text.info.username.notowner"));
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        }
+    }
 }
 

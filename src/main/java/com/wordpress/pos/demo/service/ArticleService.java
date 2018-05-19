@@ -14,5 +14,5 @@ public interface ArticleService {
     public Article getArticleByUUID(String uuid);
     public Article getArticleByUserId(long id);
     public void createArticle(User user, ArticleDTO articleDTO);
-    public void updateArticle(User user, ArticleDTO articleDTO);
+    public void updateArticle(ArticleDTO articleDTO);
 }

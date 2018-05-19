@@ -62,7 +62,7 @@ public class ArticleDTO {
     @SerializedName("article_title")
     private String articleTitle;
 
-    @SerializedName("article_content")
+        @SerializedName("article_content")
     private String articleContent;
 
     @SerializedName("commnets")

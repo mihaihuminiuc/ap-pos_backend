@@ -68,12 +68,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void updateArticle(User user, ArticleDTO articleDTO) {
-
-        Article article = new Article();
-        article.setUser(user);
-        article.setArticleContent(articleDTO.getArticleDTO().getArticleContent());
-
-        articleRepository.save(article);
+    public void updateArticle(ArticleDTO articleDTO) {
+        articleRepository.updateArticle(articleDTO.getArticleDTO().getArticleContent(),articleDTO.getArticleDTO().getArticleTitle(),articleDTO.getArticleDTO().getArticleUUID());
     }
 }

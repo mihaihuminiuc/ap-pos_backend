@@ -11,5 +11,6 @@ public interface CommentService {
 
     public List<Comments> getAllCommentsForArticleId(String uuid);
     public void createComment(CommentDTO commentDTO, User user, Article article);
-    public void updateArticle(CommentDTO commentDTO, User user, Article article);
+    public Comments getArticleByUserId(long id);
+    public void updateArticle(CommentDTO commentDTO);
 }

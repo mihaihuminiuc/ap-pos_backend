@@ -101,15 +101,15 @@ public class ArticleController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<StatusObject> verifyArticleCreator(HttpServletRequest request) throws IOException {
+    ResponseEntity<StatusObject> verifyArticleCreator(HttpServletRequest request) {
         StatusObject statusObject = new StatusObject();
 
         String token = request.getHeader(tokenHeader).substring(7);
 
         long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
-        if(userId == articleService.getArticleByUserId(userId).getUser().getId()){
-            try{
+        try{
+            if(articleService.getArticleByUserId(userId)!=null){
                 statusObject.setStatus(2);
                 statusObject.setMessage(messages.get("text.info.username.isowner"));
 
@@ -117,8 +117,7 @@ public class ArticleController {
                         .status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
-
-            }catch (PersistenceException e){
+            }else{
                 statusObject.setStatus(1);
                 statusObject.setMessage(messages.get("text.info.username.notowner"));
 
@@ -127,7 +126,7 @@ public class ArticleController {
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }
-        }else{
+        }catch (IllegalArgumentException e){
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get("text.info.username.notowner"));
 
@@ -149,25 +148,48 @@ public class ArticleController {
 
         String token = request.getHeader(tokenHeader).substring(7);
 
-        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        ArticleDTO articleDTO = new ArticleDTO(collect);
+        long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
         try{
-            articleService.updateArticle(userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)),articleDTO);
-            statusObject.setStatus(2);
-            statusObject.setMessage(messages.get("text.info.article.saved"));
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(statusObject);
-        }catch (PersistenceException e){
+            if(articleService.getArticleByUserId(userId)!=null){
+
+                String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+                ArticleDTO articleDTO = new ArticleDTO(collect);
+
+                try{
+                    articleService.updateArticle(articleDTO);
+                    statusObject.setStatus(2);
+                    statusObject.setMessage(messages.get("text.info.article.updated"));
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }catch (PersistenceException e){
+                    statusObject.setStatus(1);
+                    statusObject.setMessage(messages.get("text.error.generalerror"));
+                    return ResponseEntity
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }
+
+            }else{
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.username.notowner"));
+
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        }catch (IllegalArgumentException e){
             statusObject.setStatus(1);
-            statusObject.setMessage(messages.get("text.error.generalerror"));
+            statusObject.setMessage(messages.get("text.info.username.notowner"));
+
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.BAD_REQUEST)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         }
     }
-
 }

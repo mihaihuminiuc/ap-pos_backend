@@ -7,17 +7,17 @@ spring:
 
   datasource:
     #url: jdbc:postgresql://ec2-54-228-181-43.eu-west-1.compute.amazonaws.com/d3d05l0qrroosj?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    url: jdbc:mysql://dbdev101.ccx7hdurz6w7.eu-west-1.rds.amazonaws.com/wordpress
-    #url: jdbc:mysql://localhost:3306/wordpress
+    #url: jdbc:mysql://dbdev101.ccx7hdurz6w7.eu-west-1.rds.amazonaws.com/wordpress
+    url: jdbc:mysql://localhost:3306/wordpress
 
     driverClassName: com.mysql.jdbc.Driver
     #driverClassName: org.postgresql.Driver
 
-    #username: root
-    #password: parola123
+    username: root
+    password: parola123
 
-    username: user_1920
-    password: kinetix1920
+    #username: user_1920
+    #password: kinetix1920
 
     #username: zlkmefndobwqon
     #password: d313db086cc6537beaa7777559ba448717bc94655c6e0a94b70e55a6f05c48be
@@ -56,6 +56,7 @@ route:
     getcomments: getComments
     createcomment: createComment
     updatecomment: updateComment
+    verifycomment: verifyCommentCreator
 
 logging:
   level:

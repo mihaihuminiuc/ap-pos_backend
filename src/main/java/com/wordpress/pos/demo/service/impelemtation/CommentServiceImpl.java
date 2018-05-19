@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
+import javax.xml.stream.events.Comment;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,10 +43,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateArticle(CommentDTO commentDTO, User user, Article article) throws PersistenceException {
+    public Comments getArticleByUserId(long id) {
+        return ObjectMapperUtils.map(commentRepository.findCommentsByUserId(id), Comments.class);
+    }
 
-        Comments comments = ObjectMapperUtils.map(commentDTO, Comments.class);
-
-        commentRepository.save(comments);
+    @Override
+    public void updateArticle(CommentDTO commentDTO) throws PersistenceException {
+        commentRepository.updateComment(commentDTO.getCommentDTO().getComment(), commentDTO.getCommentDTO().getCommentUUID());
     }
 }
