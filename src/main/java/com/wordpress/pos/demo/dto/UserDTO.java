@@ -52,6 +52,8 @@ public class UserDTO {
         this.email = email;
     }
 
+    public UserDTO(){}
+
     public UserDTO(String response){
         Gson gson = new Gson();
         this.userDTO = gson.fromJson(response,UserDTO.class);

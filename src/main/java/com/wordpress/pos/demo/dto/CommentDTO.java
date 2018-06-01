@@ -53,6 +53,8 @@ public class CommentDTO {
         this.username = username;
     }
 
+    public CommentDTO(){}
+
     public CommentDTO(String response){
         Gson gson = new Gson();
         this.commentDTO = gson.fromJson(response,CommentDTO.class);
