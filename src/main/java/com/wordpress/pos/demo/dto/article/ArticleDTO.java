@@ -60,15 +60,11 @@ public class ArticleDTO {
     @JsonIgnore
     private ArticleDTO articleDTO;
 
-    @SerializedName("article_title")
     private String articleTitle;
 
-        @SerializedName("article_content")
     private String articleContent;
 
-    @SerializedName("commnets")
     private List<CommentDTO> comments;
 
-    @SerializedName("article_uuid")
     private String articleUUID;
 }

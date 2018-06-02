@@ -24,9 +24,7 @@ public class CompactArticleDTO {
         this.articleUUID = articleUUID;
     }
 
-    @SerializedName("article_title")
     private String articleTitle;
 
-    @SerializedName("article_uuid")
     private String articleUUID;
 }

@@ -1,5 +1,10 @@
 package com.wordpress.pos.demo.util;
 
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
+import org.jaxen.util.SingletonList;
+
+import java.util.List;
+
 public class StatusObject {
 
     public int getStatus() {
@@ -18,9 +23,17 @@ public class StatusObject {
         this.message = message;
     }
 
+    public <T> List<T> getGenericListResponse() {
+        return (List<T>) genericListResponse;
+    }
+
+    public void setGenericListResponse(List<?> genericListResponse) {
+        this.genericListResponse = genericListResponse;
+    }
+
     private int status;
     private String message;
+    private List<?> genericListResponse;
 
-    public StatusObject() {
-    }
+    public StatusObject() {}
 }

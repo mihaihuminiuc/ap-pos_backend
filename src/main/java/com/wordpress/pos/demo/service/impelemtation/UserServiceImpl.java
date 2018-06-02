@@ -38,8 +38,6 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
 
-        userDTO = userDTO.getUserDTO();
-
         user.setUsername(userDTO.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setUserUUID(UUID.randomUUID().toString());

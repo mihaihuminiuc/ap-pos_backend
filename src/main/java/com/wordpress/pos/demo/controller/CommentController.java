@@ -1,6 +1,7 @@
 package com.wordpress.pos.demo.controller;
 
 import com.wordpress.pos.demo.dto.CommentDTO;
+import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
 import com.wordpress.pos.demo.model.Comments;
 import com.wordpress.pos.demo.service.ArticleService;
@@ -8,16 +9,19 @@ import com.wordpress.pos.demo.service.CommentService;
 import com.wordpress.pos.demo.service.UserService;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
+import com.wordpress.pos.demo.validator.Commentvalidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +51,7 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<List<Comments>> getRestaurants(@PathVariable String uuid) {
+    ResponseEntity<List<Comments>> getComments(@PathVariable String uuid) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
@@ -59,29 +63,38 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<StatusObject> createComment(HttpServletRequest request) throws IOException {
+    ResponseEntity<StatusObject> createComment(HttpServletRequest request,
+                                               @Valid @RequestBody CommentDTO commentDTO, BindingResult bindingResult) {
         StatusObject statusObject = new StatusObject();
-
         String token = request.getHeader(tokenHeader).substring(7);
+        Commentvalidation commentvalidation = new Commentvalidation();
 
-        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        CommentDTO commentDTO = new CommentDTO(collect);
+        commentvalidation.validate(commentDTO,bindingResult);
 
-        try{
-            commentService.createComment(commentDTO,userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)), articleService.getArticleByUUID(commentDTO.getCommentDTO().getArticleUUID()));
-            statusObject.setStatus(2);
-            statusObject.setMessage(messages.get("text.info.comment.created"));
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(statusObject);
-        }catch (IllegalArgumentException | PersistenceException e){
+        if(bindingResult.hasErrors()){
             statusObject.setStatus(1);
-            statusObject.setMessage(messages.get("text.error.generalerror"));
+            statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
+        } else {
+            try{
+                commentService.createComment(commentDTO,userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)), articleService.getArticleByUUID(commentDTO.getArticleUUID()));
+                statusObject.setStatus(2);
+                statusObject.setMessage(messages.get("text.info.comment.created"));
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }catch (IllegalArgumentException | PersistenceException e){
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.error.generalerror"));
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
         }
     }
 
@@ -90,38 +103,54 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<StatusObject> updateComment(HttpServletRequest request) throws IOException {
+    ResponseEntity<StatusObject> updateComment(HttpServletRequest request,
+                                               @Valid @RequestBody CommentDTO commentDTO, BindingResult bindingResult){
         StatusObject statusObject = new StatusObject();
-
         String token = request.getHeader(tokenHeader).substring(7);
-
-        String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        CommentDTO commentDTO = new CommentDTO(collect);
-
         long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token)).getId();
 
-        try{
-            if(commentService.getCommentByUUID(commentDTO.getCommentDTO().getCommentUUID())
-                    .getUser().getId().equals(userId)){
-                try{
-                    commentService.updateArticle(commentDTO);
+        Commentvalidation commentvalidation = new Commentvalidation();
 
-                    statusObject.setStatus(2);
-                    statusObject.setMessage(messages.get("text.info.comment.updated"));
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .cacheControl(CacheControl.noCache())
-                            .body(statusObject);
-                }catch (PersistenceException e){
+        commentvalidation.validate(commentDTO,bindingResult);
+
+        if(bindingResult.hasErrors()){
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        } else {
+            try{
+                if(commentService.getCommentByUUID(commentDTO.getCommentDTO().getCommentUUID())
+                        .getUser().getId().equals(userId)){
+                    try{
+                        commentService.updateArticle(commentDTO);
+
+                        statusObject.setStatus(2);
+                        statusObject.setMessage(messages.get("text.info.comment.updated"));
+                        return ResponseEntity
+                                .status(HttpStatus.OK)
+                                .cacheControl(CacheControl.noCache())
+                                .body(statusObject);
+                    }catch (PersistenceException e){
+                        statusObject.setStatus(1);
+                        statusObject.setMessage(messages.get("text.error.generalerror"));
+
+                        return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .cacheControl(CacheControl.noCache())
+                                .body(statusObject);
+                    }
+                }else{
                     statusObject.setStatus(1);
-                    statusObject.setMessage(messages.get("text.error.generalerror"));
-
+                    statusObject.setMessage(messages.get("text.info.username.notowner"));
                     return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .cacheControl(CacheControl.noCache())
                             .body(statusObject);
                 }
-            }else{
+            }catch (IllegalArgumentException e){
                 statusObject.setStatus(1);
                 statusObject.setMessage(messages.get("text.info.username.notowner"));
                 return ResponseEntity
@@ -129,13 +158,6 @@ public class CommentController {
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }
-        }catch (IllegalArgumentException e){
-            statusObject.setStatus(1);
-            statusObject.setMessage(messages.get("text.info.username.notowner"));
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .cacheControl(CacheControl.noCache())
-                    .body(statusObject);
         }
     }
 

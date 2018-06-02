@@ -1,5 +1,6 @@
 package com.wordpress.pos.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -60,20 +61,18 @@ public class CommentDTO {
         this.commentDTO = gson.fromJson(response,CommentDTO.class);
     }
 
+    @JsonIgnore
     private CommentDTO commentDTO;
 
-    @SerializedName("comment")
     private String comment;
 
-    @SerializedName("article_uuid")
     private String articleUUID;
 
-    @SerializedName("user_uuid")
+    @JsonIgnore
     private String userUUID;
 
-    @SerializedName("comment_uuid")
     private String commentUUID;
 
-    @SerializedName("username")
+    @JsonIgnore
     private String username;
 }

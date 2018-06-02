@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void createComment(CommentDTO commentDTO, User user, Article article) throws PersistenceException {
 
-        Comments comments = ObjectMapperUtils.map(commentDTO.getCommentDTO(), Comments.class);
+        Comments comments = ObjectMapperUtils.map(commentDTO, Comments.class);
         comments.setCommentUUID(UUID.randomUUID().toString());
         comments.setUser(user);
         comments.setArticle(article);
@@ -54,6 +54,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void updateArticle(CommentDTO commentDTO) throws PersistenceException {
-        commentRepository.updateComment(commentDTO.getCommentDTO().getComment(), commentDTO.getCommentDTO().getCommentUUID());
+        commentRepository.updateComment(commentDTO.getComment(), commentDTO.getCommentUUID());
     }
 }

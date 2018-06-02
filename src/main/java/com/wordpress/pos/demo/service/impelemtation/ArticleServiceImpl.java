@@ -30,7 +30,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<CompactArticleDTO> getAllArticles(int count) {
 
         if(count>0){
-            Pageable pageable = new PageRequest(0,count);
+            Pageable pageable = new PageRequest(count,20);
             Page<Article> articlePage = articleRepository.findAll(pageable);
 
             return ObjectMapperUtils.mapAll(articlePage.getContent(), CompactArticleDTO.class);
@@ -60,8 +60,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         Article article = new Article();
         article.setUser(user);
-        article.setArticleContent(articleDTO.getArticleDTO().getArticleContent());
-        article.setArticleTitle(articleDTO.getArticleDTO().getArticleTitle());
+        article.setArticleContent(articleDTO.getArticleContent());
+        article.setArticleTitle(articleDTO.getArticleTitle());
         article.setArticleUUID(UUID.randomUUID().toString());
 
         articleRepository.save(article);
@@ -69,6 +69,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void updateArticle(ArticleDTO articleDTO) {
-        articleRepository.updateArticle(articleDTO.getArticleDTO().getArticleContent(),articleDTO.getArticleDTO().getArticleTitle(),articleDTO.getArticleDTO().getArticleUUID());
+        articleRepository.updateArticle(articleDTO.getArticleContent(),articleDTO.getArticleTitle(),articleDTO.getArticleUUID());
     }
 }
