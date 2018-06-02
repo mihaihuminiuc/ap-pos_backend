@@ -17,7 +17,6 @@ public class ArticleValidation implements Validator {
 
         ValidationUtils.rejectIfEmpty(errors, "articleContent", "text.error.article.empty");
         ValidationUtils.rejectIfEmpty(errors, "articleTitle", "text.error.article.titleempty");
-        ValidationUtils.rejectIfEmpty(errors, "articleUUID", "text.error.article.uuid");
 
         if(articleDTO.getArticleTitle().trim().length()<5)
             errors.rejectValue("articleTitle","text.error.article.titletoshort");
