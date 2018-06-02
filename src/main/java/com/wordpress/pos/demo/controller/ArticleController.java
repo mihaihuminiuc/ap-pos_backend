@@ -1,6 +1,5 @@
 package com.wordpress.pos.demo.controller;
 
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
@@ -9,7 +8,6 @@ import com.wordpress.pos.demo.service.UserService;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
 import com.wordpress.pos.demo.validator.ArticleValidation;
-import org.jaxen.util.SingletonList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
@@ -22,11 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class ArticleController {

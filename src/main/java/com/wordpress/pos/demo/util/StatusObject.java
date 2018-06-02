@@ -1,8 +1,5 @@
 package com.wordpress.pos.demo.util;
 
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
-import org.jaxen.util.SingletonList;
-
 import java.util.List;
 
 public class StatusObject {
