@@ -22,4 +22,11 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             @Param("articleTitle") String articleTitle,
             @Param("articleUUID") String articleUUID
     );
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Article WHERE articleUUID = :articleUUID")
+    void deleteArticle(
+            @Param("articleUUID") String articleUUID
+    );
 }

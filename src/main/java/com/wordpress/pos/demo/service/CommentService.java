@@ -13,5 +13,6 @@ public interface CommentService {
     public void createComment(CommentDTO commentDTO, User user, Article article);
     public Comments getCommentByUUID(String uuid);
     public Comments getArticleByUserId(long id);
-    public void updateArticle(CommentDTO commentDTO);
+    public void updateComment(CommentDTO commentDTO);
+    public void deleteComment(String uuid);
 }

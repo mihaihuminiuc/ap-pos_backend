@@ -77,10 +77,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatcher("/getProfile")
                 .antMatcher("/saveProfile")
                 .antMatcher("/createArticle")
-                .antMatcher("/updateArticle")
+                .antMatcher("/updateComment")
                 .antMatcher("/verifyArticleCreator")
                 .antMatcher("/createComment")
                 .antMatcher("/updateComment")
-                .antMatcher("/verifyCommentCreator");
+                .antMatcher("/verifyCommentCreator")
+                .antMatcher("/deleteArticle")
+                .antMatcher("/deleteComment");
     }
 }

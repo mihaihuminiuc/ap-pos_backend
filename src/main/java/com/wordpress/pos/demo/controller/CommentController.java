@@ -1,7 +1,6 @@
 package com.wordpress.pos.demo.controller;
 
 import com.wordpress.pos.demo.dto.CommentDTO;
-import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
 import com.wordpress.pos.demo.model.Comments;
 import com.wordpress.pos.demo.service.ArticleService;
@@ -22,9 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class CommentController {
@@ -75,7 +72,7 @@ public class CommentController {
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.BAD_REQUEST)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         } else {
@@ -117,7 +114,7 @@ public class CommentController {
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.BAD_REQUEST)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         } else {
@@ -125,7 +122,7 @@ public class CommentController {
                 if(commentService.getCommentByUUID(commentDTO.getCommentDTO().getCommentUUID())
                         .getUser().getId().equals(userId)){
                     try{
-                        commentService.updateArticle(commentDTO);
+                        commentService.updateComment(commentDTO);
 
                         statusObject.setStatus(2);
                         statusObject.setMessage(messages.get("text.info.comment.updated"));
@@ -138,7 +135,7 @@ public class CommentController {
                         statusObject.setMessage(messages.get("text.error.generalerror"));
 
                         return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .cacheControl(CacheControl.noCache())
                                 .body(statusObject);
                     }
@@ -146,7 +143,7 @@ public class CommentController {
                     statusObject.setStatus(1);
                     statusObject.setMessage(messages.get("text.info.username.notowner"));
                     return ResponseEntity
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .status(HttpStatus.OK)
                             .cacheControl(CacheControl.noCache())
                             .body(statusObject);
                 }
@@ -154,7 +151,7 @@ public class CommentController {
                 statusObject.setStatus(1);
                 statusObject.setMessage(messages.get("text.info.username.notowner"));
                 return ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }
@@ -185,7 +182,7 @@ public class CommentController {
                 statusObject.setStatus(1);
                 statusObject.setMessage(messages.get("text.info.username.notowner"));
                 return ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }
@@ -193,7 +190,43 @@ public class CommentController {
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get("text.info.username.notowner"));
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${route.comment.deletecomment}/{uuid}", method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public @ResponseBody
+    ResponseEntity<StatusObject> deleteComment(HttpServletRequest request, @PathVariable String uuid) {
+        StatusObject statusObject = new StatusObject();
+
+        if(request.isUserInRole("ROLE_ADMIN")){
+
+            try{
+                commentService.deleteComment(uuid);
+                statusObject.setStatus(2);
+                statusObject.setMessage(messages.get("text.info.comment.delete"));
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            } catch (Exception e){
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.error.generalerror"));
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        } else {
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get("text.error.notadmin"));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         }

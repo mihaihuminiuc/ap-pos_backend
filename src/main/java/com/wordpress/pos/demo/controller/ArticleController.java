@@ -5,6 +5,7 @@ import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
 import com.wordpress.pos.demo.service.ArticleService;
 import com.wordpress.pos.demo.service.UserService;
+import com.wordpress.pos.demo.util.AuthorityName;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
 import com.wordpress.pos.demo.validator.ArticleValidation;
@@ -117,7 +118,7 @@ public class ArticleController {
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.BAD_REQUEST)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         } else {
@@ -167,7 +168,7 @@ public class ArticleController {
                 statusObject.setMessage(messages.get("text.info.username.notowner"));
 
                 return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
+                        .status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }
@@ -176,7 +177,7 @@ public class ArticleController {
             statusObject.setMessage(messages.get("text.info.username.notowner"));
 
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         }
@@ -199,57 +200,84 @@ public class ArticleController {
             statusObject.setStatus(1);
             statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.BAD_REQUEST)
                     .cacheControl(CacheControl.noCache())
                     .body(statusObject);
         } else {
-           if(bindingResult.hasErrors()){
-               statusObject.setStatus(1);
-               statusObject.setMessage(messages.get(bindingResult.getAllErrors().get(0).getCode()));
-               return ResponseEntity
-                       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                       .cacheControl(CacheControl.noCache())
-                       .body(statusObject);
-           } else {
-               try{
-                   long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader).substring(7))).getId();
-                   if(articleService.getArticleByUUID(articleDTO.getArticleUUID()).getUser().getId().equals(userId)){
-                       try{
-                           articleService.updateArticle(articleDTO);
-                           statusObject.setStatus(2);
-                           statusObject.setMessage(messages.get("text.info.article.updated"));
-                           return ResponseEntity
-                                   .status(HttpStatus.OK)
-                                   .cacheControl(CacheControl.noCache())
-                                   .body(statusObject);
-                       }catch (PersistenceException e){
-                           statusObject.setStatus(1);
-                           statusObject.setMessage(messages.get("text.error.generalerror"));
-                           return ResponseEntity
-                                   .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                   .cacheControl(CacheControl.noCache())
-                                   .body(statusObject);
-                       }
+            try{
+                long userId = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader).substring(7))).getId();
+                if(articleService.getArticleByUUID(articleDTO.getArticleUUID()).getUser().getId().equals(userId)){
+                    try{
+                        articleService.updateArticle(articleDTO);
+                        statusObject.setStatus(2);
+                        statusObject.setMessage(messages.get("text.info.article.updated"));
+                        return ResponseEntity
+                                .status(HttpStatus.OK)
+                                .cacheControl(CacheControl.noCache())
+                                .body(statusObject);
+                    }catch (PersistenceException e){
+                        statusObject.setStatus(1);
+                        statusObject.setMessage(messages.get("text.error.generalerror"));
+                        return ResponseEntity
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .cacheControl(CacheControl.noCache())
+                                .body(statusObject);
+                    }
 
-                   }else{
-                       statusObject.setStatus(1);
-                       statusObject.setMessage(messages.get("text.info.username.notowner"));
+                }else{
+                    statusObject.setStatus(1);
+                    statusObject.setMessage(messages.get("text.info.username.notowner"));
 
-                       return ResponseEntity
-                               .status(HttpStatus.BAD_REQUEST)
-                               .cacheControl(CacheControl.noCache())
-                               .body(statusObject);
-                   }
-               }catch (IllegalArgumentException e){
-                   statusObject.setStatus(1);
-                   statusObject.setMessage(messages.get("text.info.username.notowner"));
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }
+            }catch (IllegalArgumentException e){
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.username.notowner"));
 
-                   return ResponseEntity
-                           .status(HttpStatus.BAD_REQUEST)
-                           .cacheControl(CacheControl.noCache())
-                           .body(statusObject);
-               }
-           }
-       }
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "${route.article.deletearticle}/{uuid}", method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public @ResponseBody
+    ResponseEntity<StatusObject> deleteArticle(HttpServletRequest request, @PathVariable String uuid) {
+        StatusObject statusObject = new StatusObject();
+
+        if(request.isUserInRole("ROLE_ADMIN")){
+
+            try{
+                articleService.deleteArticle(uuid);
+                statusObject.setStatus(2);
+                statusObject.setMessage(messages.get("text.info.article.delete"));
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            } catch (Exception e){
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.error.generalerror"));
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .cacheControl(CacheControl.noCache())
+                        .body(statusObject);
+            }
+        } else {
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get("text.error.notadmin"));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        }
     }
 }

@@ -22,4 +22,11 @@ public interface CommentRepository extends JpaRepository<Comments, Long> {
             @Param("comment") String comment,
             @Param("commentUUID") String commentUUID
     );
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Comments WHERE commentUUID = :commentUUID")
+    void deleteComment(
+            @Param("commentUUID") String commentUUID
+    );
 }

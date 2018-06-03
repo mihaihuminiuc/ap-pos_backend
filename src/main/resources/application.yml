@@ -57,11 +57,13 @@ route:
     createarticle: createArticle
     updatearticle: updateArticle
     verifyarticle: verifyArticleCreator
+    deletearticle: deleteArticle
   comment:
     getcomments: getComments
     createcomment: createComment
     updatecomment: updateComment
     verifycomment: verifyCommentCreator
+    deletecomment: deleteComment
 
 logging:
   level:

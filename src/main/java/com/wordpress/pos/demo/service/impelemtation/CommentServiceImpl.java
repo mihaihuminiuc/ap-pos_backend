@@ -10,6 +10,7 @@ import com.wordpress.pos.demo.repository.CommentRepository;
 import com.wordpress.pos.demo.service.CommentService;
 import com.wordpress.pos.demo.util.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
@@ -53,7 +54,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateArticle(CommentDTO commentDTO) throws PersistenceException {
+    public void updateComment(CommentDTO commentDTO) throws PersistenceException {
         commentRepository.updateComment(commentDTO.getComment(), commentDTO.getCommentUUID());
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deleteComment(String uuid) {
+        commentRepository.deleteComment(uuid);
     }
 }
