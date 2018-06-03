@@ -2,10 +2,13 @@ package com.wordpress.pos.demo.controller;
 
 import com.wordpress.pos.demo.dto.CommentDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
+import com.wordpress.pos.demo.model.Authority;
 import com.wordpress.pos.demo.model.Comments;
+import com.wordpress.pos.demo.model.User;
 import com.wordpress.pos.demo.service.ArticleService;
 import com.wordpress.pos.demo.service.CommentService;
 import com.wordpress.pos.demo.service.UserService;
+import com.wordpress.pos.demo.util.AuthorityName;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
 import com.wordpress.pos.demo.validator.Commentvalidation;
@@ -204,21 +207,33 @@ public class CommentController {
     ResponseEntity<StatusObject> deleteComment(HttpServletRequest request, @PathVariable String uuid) {
         StatusObject statusObject = new StatusObject();
 
-        if(request.isUserInRole("ROLE_ADMIN")){
+        String token = request.getHeader(tokenHeader).substring(7);
+        User user = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token));
 
-            try{
-                commentService.deleteComment(uuid);
-                statusObject.setStatus(2);
-                statusObject.setMessage(messages.get("text.info.comment.delete"));
+        if(userService.isUserAdmin(user)){
+
+            if(commentService.getCommentByUUID(uuid)!=null) {
+                try{
+                    commentService.deleteComment(uuid);
+                    statusObject.setStatus(2);
+                    statusObject.setMessage(messages.get("text.info.comment.delete"));
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                } catch (Exception e){
+                    statusObject.setStatus(1);
+                    statusObject.setMessage(messages.get("text.error.generalerror"));
+                    return ResponseEntity
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }
+            } else {
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.comment.notfound"));
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .cacheControl(CacheControl.noCache())
-                        .body(statusObject);
-            } catch (Exception e){
-                statusObject.setStatus(1);
-                statusObject.setMessage(messages.get("text.error.generalerror"));
-                return ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }

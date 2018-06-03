@@ -10,4 +10,5 @@ public interface UserService {
     public User getByUsername(String username);
     public User saveUsername(UserDTO userDTO);
     public void updateUser(UserDTO userDTO) throws PersistenceException;
+    public boolean isUserAdmin(User User);
 }

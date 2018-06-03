@@ -1,8 +1,11 @@
 package com.wordpress.pos.demo.controller;
 
+import com.wordpress.pos.demo.dto.UserDTO;
 import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
+import com.wordpress.pos.demo.model.Authority;
+import com.wordpress.pos.demo.model.User;
 import com.wordpress.pos.demo.service.ArticleService;
 import com.wordpress.pos.demo.service.UserService;
 import com.wordpress.pos.demo.util.AuthorityName;
@@ -253,21 +256,33 @@ public class ArticleController {
     ResponseEntity<StatusObject> deleteArticle(HttpServletRequest request, @PathVariable String uuid) {
         StatusObject statusObject = new StatusObject();
 
-        if(request.isUserInRole("ROLE_ADMIN")){
+        String token = request.getHeader(tokenHeader).substring(7);
+        User user = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token));
 
-            try{
-                articleService.deleteArticle(uuid);
-                statusObject.setStatus(2);
-                statusObject.setMessage(messages.get("text.info.article.delete"));
+        if(userService.isUserAdmin(user)){
+
+            if(articleService.getArticleByUUID(uuid)!=null){
+                try{
+                    articleService.deleteArticle(uuid);
+                    statusObject.setStatus(2);
+                    statusObject.setMessage(messages.get("text.info.article.delete"));
+                    return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                } catch (Exception e){
+                    statusObject.setStatus(1);
+                    statusObject.setMessage(messages.get("text.error.generalerror"));
+                    return ResponseEntity
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .cacheControl(CacheControl.noCache())
+                            .body(statusObject);
+                }
+            } else {
+                statusObject.setStatus(1);
+                statusObject.setMessage(messages.get("text.info.article.notfound"));
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .cacheControl(CacheControl.noCache())
-                        .body(statusObject);
-            } catch (Exception e){
-                statusObject.setStatus(1);
-                statusObject.setMessage(messages.get("text.error.generalerror"));
-                return ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .cacheControl(CacheControl.noCache())
                         .body(statusObject);
             }

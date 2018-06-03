@@ -76,6 +76,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteArticle(String uuid) {
-        articleRepository.deleteArticle(uuid);
+        long articleId = articleRepository.findByArticleUUID(uuid).getId();
+        articleRepository.delete(articleId);
     }
 }

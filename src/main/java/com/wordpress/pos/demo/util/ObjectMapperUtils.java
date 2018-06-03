@@ -36,7 +36,10 @@ public class ObjectMapperUtils {
      * @return new object of <code>outClass</code> type.
      */
     public static <D, T> D map(final T entity, Class<D> outClass) {
-        return modelMapper.map(entity, outClass);
+        if(entity != null)
+            return modelMapper.map(entity, outClass);
+        else
+            return null;
     }
 
     /**

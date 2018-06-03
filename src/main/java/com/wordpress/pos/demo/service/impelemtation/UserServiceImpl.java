@@ -1,9 +1,11 @@
 package com.wordpress.pos.demo.service.impelemtation;
 
 import com.wordpress.pos.demo.dto.UserDTO;
+import com.wordpress.pos.demo.model.Authority;
 import com.wordpress.pos.demo.model.User;
 import com.wordpress.pos.demo.repository.UserRepository;
 import com.wordpress.pos.demo.service.UserService;
+import com.wordpress.pos.demo.util.AuthorityName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,17 @@ public class UserServiceImpl implements UserService {
         userId = this.userRepository.findByUsername(userDTO.getUsername()).getId();
 
         this.userRepository.saveUserData(userId,userDTO.getFirstName(),userDTO.getLastName(),userDTO.getEmail());
+    }
+
+    @Override
+    public boolean isUserAdmin(User user) {
+        boolean ret = false;
+
+        for(Authority a : user.getAuthorities()){
+            ret |= a.getName().equals(AuthorityName.ROLE_ADMIN);
+        }
+
+        return ret;
     }
 
 }

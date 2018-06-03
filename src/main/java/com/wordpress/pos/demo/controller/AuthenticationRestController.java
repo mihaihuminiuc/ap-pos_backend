@@ -5,6 +5,8 @@ import com.wordpress.pos.demo.jwt.JwtAuthenticationRequest;
 import com.wordpress.pos.demo.dto.JwtDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
 import com.wordpress.pos.demo.jwt.JwtUser;
+import com.wordpress.pos.demo.model.User;
+import com.wordpress.pos.demo.service.UserService;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
 import com.wordpress.pos.demo.validator.UserValidator;
@@ -36,6 +38,9 @@ public class AuthenticationRestController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -93,6 +98,38 @@ public class AuthenticationRestController {
 
         statusObject.setStatus(2);
         statusObject.setMessage("successfully logged out");
-        return ResponseEntity.badRequest().body(statusObject);
+        statusObject.setGenericListResponse(null);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .body(statusObject);
+    }
+
+    @RequestMapping(value = "${route.user.isadmin}", method = RequestMethod.GET)
+    public ResponseEntity<?> isAdmin(HttpServletRequest request){
+        StatusObject statusObject = new StatusObject();
+
+        String token = request.getHeader(tokenHeader).substring(7);
+        User user = userService.getByUsername(jwtTokenUtil.getUsernameFromToken(token));
+
+        if(userService.isUserAdmin(user)){
+            statusObject.setStatus(2);
+            statusObject.setMessage(messages.get("text.info.username.isadmin"));
+            statusObject.setGenericListResponse(null);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        } else {
+            statusObject.setStatus(1);
+            statusObject.setMessage(messages.get("text.info.username.notadmin"));
+            statusObject.setGenericListResponse(null);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(statusObject);
+        }
+
+
     }
 }

@@ -64,6 +64,8 @@ route:
     updatecomment: updateComment
     verifycomment: verifyCommentCreator
     deletecomment: deleteComment
+  user:
+    isadmin: isAdmin
 
 logging:
   level:
