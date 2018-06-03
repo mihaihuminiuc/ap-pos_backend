@@ -1,6 +1,6 @@
 package com.wordpress.pos.demo.controller;
 
-import com.wordpress.pos.demo.dto.UserDTO;
+import com.wordpress.pos.demo.dto.user.UserDTO;
 import com.wordpress.pos.demo.service.impelemtation.UserServiceImpl;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
@@ -11,15 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.stream.Collectors;
 
 @RestController
 public class RegisterRestController {

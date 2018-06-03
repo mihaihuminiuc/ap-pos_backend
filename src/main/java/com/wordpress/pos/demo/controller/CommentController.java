@@ -51,7 +51,8 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public @ResponseBody
-    ResponseEntity<List<Comments>> getComments(@PathVariable String uuid) {
+    ResponseEntity<List<CommentDTO>> getComments(@PathVariable String uuid) {
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())

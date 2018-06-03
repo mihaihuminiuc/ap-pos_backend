@@ -1,6 +1,6 @@
 package com.wordpress.pos.demo.controller;
 
-import com.wordpress.pos.demo.dto.UserDTO;
+import com.wordpress.pos.demo.dto.user.UserDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
 import com.wordpress.pos.demo.jwt.JwtUser;
 import com.wordpress.pos.demo.service.impelemtation.UserServiceImpl;

@@ -30,14 +30,6 @@ public class CommentDTO {
         this.articleUUID = articleUUID;
     }
 
-    public String getUserUUID() {
-        return userUUID;
-    }
-
-    public void setUserUUID(String userUUID) {
-        this.userUUID = userUUID;
-    }
-
     public String getCommentUUID() {
         return commentUUID;
     }
@@ -68,11 +60,7 @@ public class CommentDTO {
 
     private String articleUUID;
 
-    @JsonIgnore
-    private String userUUID;
-
     private String commentUUID;
 
-    @JsonIgnore
     private String username;
 }

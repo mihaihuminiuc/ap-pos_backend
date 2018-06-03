@@ -1,5 +1,6 @@
 package com.wordpress.pos.demo.repository;
 
+import com.wordpress.pos.demo.model.Authority;
 import com.wordpress.pos.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+    User findByUserUUID(String uuid);
 
     @Modifying
     @Transactional

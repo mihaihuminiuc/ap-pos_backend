@@ -18,10 +18,10 @@ public class ArticleValidation implements Validator {
         ValidationUtils.rejectIfEmpty(errors, "articleContent", "text.error.article.empty");
         ValidationUtils.rejectIfEmpty(errors, "articleTitle", "text.error.article.titleempty");
 
-        if(articleDTO.getArticleTitle().trim().length()<5)
+        if(articleDTO.getArticleTitle() == null || articleDTO.getArticleTitle().trim().length()<5)
             errors.rejectValue("articleTitle","text.error.article.titletoshort");
 
-        if(articleDTO.getArticleContent().trim().length()<20)
+        if(articleDTO.getArticleContent() == null || articleDTO.getArticleContent().trim().length()<20)
             errors.rejectValue("articleContent","text.error.article.toshort");
     }
 }

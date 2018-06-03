@@ -84,6 +84,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatcher("/verifyCommentCreator")
                 .antMatcher("/deleteArticle")
                 .antMatcher("/deleteComment")
-                .antMatcher("/isAdmin");
+                .antMatcher("/isAdmin")
+                .antMatcher("/listUser")
+                .antMatcher("/setAuthority")
+                .antMatcher("/deleteUser")
+                .antMatcher("/getAuthority");
     }
 }

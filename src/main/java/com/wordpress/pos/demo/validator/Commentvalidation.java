@@ -18,7 +18,7 @@ public class Commentvalidation implements Validator {
         ValidationUtils.rejectIfEmpty(errors, "comment", "text.error.comment.empty");
         ValidationUtils.rejectIfEmpty(errors, "articleUUID", "text.error.comment.article_uuid");
 
-        if(commentDTO.getComment().trim().length()<5)
+        if(commentDTO.getComment() == null || commentDTO.getComment().trim().length()<5)
             errors.rejectValue("comment","text.error.comment.toshort");
     }
 }

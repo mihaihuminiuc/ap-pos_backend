@@ -9,10 +9,9 @@ import java.util.List;
 
 public interface CommentService {
 
-    public List<Comments> getAllCommentsForArticleId(String uuid);
+    public List<CommentDTO> getAllCommentsForArticleId(String uuid);
     public void createComment(CommentDTO commentDTO, User user, Article article);
     public Comments getCommentByUUID(String uuid);
-    public Comments getArticleByUserId(long id);
     public void updateComment(CommentDTO commentDTO);
     public void deleteComment(String uuid);
 }

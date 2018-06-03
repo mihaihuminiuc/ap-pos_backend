@@ -66,6 +66,11 @@ route:
     deletecomment: deleteComment
   user:
     isadmin: isAdmin
+  admin:
+    listusers: listUser
+    setauthority: setAuthority
+    deleteuser: deleteUser
+    getauthority: getAuthority
 
 logging:
   level:

@@ -1,6 +1,6 @@
 package com.wordpress.pos.demo.service.impelemtation;
 
-import com.wordpress.pos.demo.dto.UserDTO;
+import com.wordpress.pos.demo.dto.user.UserDTO;
 import com.wordpress.pos.demo.model.Authority;
 import com.wordpress.pos.demo.model.User;
 import com.wordpress.pos.demo.repository.UserRepository;
@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return this.userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User getByUserUUID(String uuid) {
+        return this.userRepository.findByUserUUID(uuid);
     }
 
     @Override

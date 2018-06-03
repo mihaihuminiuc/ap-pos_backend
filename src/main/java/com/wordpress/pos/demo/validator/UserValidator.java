@@ -1,6 +1,6 @@
 package com.wordpress.pos.demo.validator;
 
-import com.wordpress.pos.demo.dto.UserDTO;
+import com.wordpress.pos.demo.dto.user.UserDTO;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;

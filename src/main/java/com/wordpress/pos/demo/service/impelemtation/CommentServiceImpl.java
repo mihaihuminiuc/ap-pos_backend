@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import javax.xml.stream.events.Comment;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +29,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comments> getAllCommentsForArticleId(String uuid) {
-        return commentRepository.findAllByArticle_ArticleUUID(uuid);
+    public List<CommentDTO> getAllCommentsForArticleId(String uuid) {
+        List<CommentDTO> commentDTOS = new ArrayList<>();
+        for(Comments c : commentRepository.findAllByArticle_ArticleUUID(uuid)){
+            CommentDTO commentDTO = ObjectMapperUtils.map(c, CommentDTO.class);
+            commentDTO.setUsername(c.getUser().getUsername());
+            commentDTOS.add(commentDTO);
+        }
+
+        return commentDTOS;
     }
 
     @Override
@@ -46,11 +53,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comments getCommentByUUID(String uuid) {
         return ObjectMapperUtils.map(commentRepository.findByCommentUUID(uuid), Comments.class);
-    }
-
-    @Override
-    public Comments getArticleByUserId(long id) {
-        return ObjectMapperUtils.map(commentRepository.findCommentsByUserId(id), Comments.class);
     }
 
     @Override

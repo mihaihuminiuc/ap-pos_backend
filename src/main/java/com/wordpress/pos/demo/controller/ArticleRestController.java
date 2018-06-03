@@ -1,14 +1,11 @@
 package com.wordpress.pos.demo.controller;
 
-import com.wordpress.pos.demo.dto.UserDTO;
 import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
-import com.wordpress.pos.demo.model.Authority;
 import com.wordpress.pos.demo.model.User;
 import com.wordpress.pos.demo.service.ArticleService;
 import com.wordpress.pos.demo.service.UserService;
-import com.wordpress.pos.demo.util.AuthorityName;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
 import com.wordpress.pos.demo.validator.ArticleValidation;
@@ -28,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-public class ArticleController {
+public class ArticleRestController {
 
     @Value("${jwt.header}")
     private String tokenHeader;

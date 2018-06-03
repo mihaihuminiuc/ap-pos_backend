@@ -1,7 +1,7 @@
-package com.wordpress.pos.demo.dto;
+package com.wordpress.pos.demo.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 public class UserDTO {
     public String getUsername() {
@@ -59,6 +59,7 @@ public class UserDTO {
         this.userDTO = gson.fromJson(response,UserDTO.class);
     }
 
+    @JsonIgnore
     private UserDTO userDTO;
 
     private String username;

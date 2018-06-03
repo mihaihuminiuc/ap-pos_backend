@@ -1,6 +1,8 @@
 package com.wordpress.pos.demo.repository;
 
+import com.wordpress.pos.demo.dto.CommentDTO;
 import com.wordpress.pos.demo.model.Comments;
+import com.wordpress.pos.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,6 @@ public interface CommentRepository extends JpaRepository<Comments, Long> {
 
     List<Comments> findAllByArticle_ArticleUUID(String uuid);
     Comments findByCommentUUID(String uuid);
-    List<Comments> findCommentsByUserId(Long id);
 
     @Modifying
     @Transactional
