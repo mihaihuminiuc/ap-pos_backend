@@ -40,7 +40,7 @@ public class AdminServiceImpl implements AdminServices {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(String uuid) {
         User user = userRepository.findByUserUUID(uuid);
-        userRepository.delete(user);
+        userRepository.deleteUserById(user.getId());
     }
 
     @Override
