@@ -1,8 +1,6 @@
-package com.wordpress.pos.demo.service.impelemtation;
+package com.wordpress.pos.demo.service.implemtation;
 
-import com.wordpress.pos.demo.dto.article.ArticleDTO;
 import com.wordpress.pos.demo.dto.CommentDTO;
-import com.wordpress.pos.demo.dto.article.CompactArticleDTO;
 import com.wordpress.pos.demo.model.Article;
 import com.wordpress.pos.demo.model.Comments;
 import com.wordpress.pos.demo.model.User;

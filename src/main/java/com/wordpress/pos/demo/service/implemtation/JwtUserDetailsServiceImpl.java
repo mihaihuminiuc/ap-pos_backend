@@ -1,4 +1,4 @@
-package com.wordpress.pos.demo.service.impelemtation;
+package com.wordpress.pos.demo.service.implemtation;
 
 import com.wordpress.pos.demo.jwt.JwtUserFactory;
 import com.wordpress.pos.demo.model.User;

@@ -3,7 +3,7 @@ package com.wordpress.pos.demo.controller;
 import com.wordpress.pos.demo.dto.user.UserDTO;
 import com.wordpress.pos.demo.jwt.JwtTokenUtil;
 import com.wordpress.pos.demo.jwt.JwtUser;
-import com.wordpress.pos.demo.service.impelemtation.UserServiceImpl;
+import com.wordpress.pos.demo.service.implemtation.UserServiceImpl;
 import com.wordpress.pos.demo.util.Messages;
 import com.wordpress.pos.demo.util.StatusObject;
 import org.springframework.beans.factory.annotation.Autowired;

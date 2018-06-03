@@ -49,10 +49,6 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    public String getAudienceFromToken(String token) {
-        return getClaimFromToken(token, Claims::getAudience);
-    }
-
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
@@ -86,11 +82,6 @@ public class JwtTokenUtil implements Serializable {
         return audience;
     }
 
-    private Boolean ignoreTokenExpiration(String token) {
-        String audience = getAudienceFromToken(token);
-        return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
-    }
-
     public String generateToken(UserDetails userDetails, Device device) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername(), generateAudience(device));
@@ -111,26 +102,6 @@ public class JwtTokenUtil implements Serializable {
                 .setAudience(audience)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-    }
-
-    public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getIssuedAtDateFromToken(token);
-        return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
-                && (!isTokenExpired(token) || ignoreTokenExpiration(token));
-    }
-
-    public String refreshToken(String token) {
-        final Date createdDate = clock.now();
-        final Date expirationDate = calculateExpirationDate(createdDate);
-
-        final Claims claims = getAllClaimsFromToken(token);
-        claims.setIssuedAt(createdDate);
-        claims.setExpiration(expirationDate);
-
-        return Jwts.builder()
-                .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
